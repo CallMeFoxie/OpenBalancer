@@ -194,7 +194,7 @@ All requests except POST /auth/ require X-Auth-Token header with auth token retr
   - **password** - sha1 salted password
   - **salt** - salt used for this password
   - **name** - user's name
-  - **groups** - user's group membership
+  - **group** - user's group membership
   - **enabled** - user is enabled (true/false) to authenticate
 
 ## group
