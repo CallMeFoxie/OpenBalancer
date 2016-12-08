@@ -1,156 +1,87 @@
 # OpenBalancer REST API reference
 
-**GET /upstream/** - lists all [upstreams](#upstream)
+**GET /upstream/** - lists all [upstreams](#upstream)  
+**POST /upstream/** - creates a new [upstream](#upstream)  
+**GET /upstream/&lt;upstream_name&gt;** - lists a specific [upstream](#upstream)  
+**PUT /upstream/&lt;upstream_name&gt;** - replaces an [upstream](#upstream)  
+**PATCH /upstream/&lt;upstream_name&gt;** - patches an [upstream](#upstream)  
+**DELETE /upstream/&lt;upstream_name&gt;** - deletes an empty [upstream](#upstream)  
 
-**POST /upstream/** - creates a new [upstream](#upstream)
 
-**GET /upstream/&lt;upstream_name&gt;** - lists a specific [upstream](#upstream)
+**GET /check/** - lists all [checks](#checks)  
+**POST /check/** - creates a new check  
+**GET /check/&lt;check_name&gt;** - lists a specific [check](#checks)  
+**PATCH /check/&lt;check_name&gt;** - changes a check  
+**PUT /check/&lt;check_name&gt;** - replaces a check  
 
-**PUT /upstream/&lt;upstream_name&gt;** - replaces an [upstream](#upstream)
 
-**PATCH /upstream/&lt;upstream_name&gt;** - patches an [upstream](#upstream)
+**GET /upstream/&lt;upstream_name&gt;/node** - lists all nodes in an upstream  
+**POST /upstream/&lt;upstream_name&gt;/node** - adds a new node to an upstream  
+**PUT /upstream/&lt;upstream_name&gt;/node/&lt;upstream_hostname&gt;** - replaces a node in an upstream  
+**PATCH /upstream/&lt;upstream_name&gt;/node/&lt;upstream_hostname&gt;** - patches a node in an upstream  
+**DELETE /upstream/&lt;upstream_name&gt;/node/&lt;upstream_hostname&gt;** - deletes a node in an upstream  
 
-**DELETE /upstream/&lt;upstream_name&gt;** - deletes an empty [upstream](#upstream)
 
+**GET /upstream/&lt;upstream_name&gt;/check** - lists all checks for an upstream  
+**POST /upstream/&lt;upstream_name&gt;/check** - adds a check to an upstream  
+**PUT /upstream/&lt;upstream_name&gt;/check/&lt;check_name&gt;** - replaces a check in an upstream  
+**PATCH /upstream/&lt;upstream_name&gt;/check/&lt;check_name&gt;** - patches a check in an upstream  
+**DELETE /upstream/&lt;upstream_name&gt;/check/&lt;check_name&gt;** - removes a check from an upstream  
 
 
+**GET /upstream/&lt;upstream_name&gt;/acl** - lists ACLs for all upstreams  
+**POST /upstream/&lt;upstream_name&gt;/acl** - adds a new ACL to an upstream  
+**PUT /upstream/&lt;upstream_name&gt;/acl/&lt;group_name&gt;** - replaces ACL for an upstream group  
+**PATCH /upstream/&lt;upstream_name&gt;/acl/&lt;group_name&gt;** - patches ACL for an upstream group  
+**DELETE /upstream/&lt;upstream_name&gt;/acl/&lt;group_name&gt;** - removes group from an upstream ACL  
 
-**GET /check/** - lists all [checks](#checks)
 
-**POST /check/** - creates a new check
+**GET /node** - lists all upstreams defined on a node  
+**POST /node** - creates a new access node  
+**POST /node/&lt;node_hostname&gt;** - adds a new upstream to a node  
+**DELETE /node/&lt;node_hostname&gt;/&lt;upstream_name&gt;** - removes an upstream from a node  
+**DELETE /node/&lt;node_hostname&gt;** - deletes an access node  
 
-**GET /check/&lt;check_name&gt;** - lists a specific [check](#checks)
 
-**PATCH /check/&lt;check_name&gt;** - changes a check
+**GET /management/node** - gets node list and basic settings  
+**POST /management/node/** - adds a new node  
+**GET /management/node/&lt;host_name&gt;** - gets specific node's settings  
+**PUT /management/node/&lt;host_name&gt;** - replaces node's settings  
+**PATCH /management/node/&lt;host_name&gt;** - changes a parameter about a node  
+**DELETE /management/node/&lt;host_name&gt;** - disconnects a node from the current cluster  
+**DELETE /management/node** - safely resets a LOCAL node completely  
+**DELETE /management/node?force** - force resets a LOCAL node completely  
 
-**PUT /check/&lt;check_name&gt;** - replaces a check
 
+**GET /user** - gets users + their group membership  
+**GET /user/&lt;user_name&gt;** - gets a specific user  
+**POST /user** - adds a new user  
+**DELETE /user/&lt;user_name&gt;** - deletes a user  
+**PATCH /user/&lt;user_name&gt;** - changes a parameter about a user  
+**POST /user/&lt;user_name&gt;** - adds a user to a group  
+**DELETE /user/&lt;user_name&gt;/&lt;group_name&gt;** - deletes a user from a group  
 
 
+**GET /group** - gets all groups and their ACLs  
+**GET /group/&lt;group_name&gt;** - gets a specific group and its ACL  
+**POST /group** - add a group  
+**DELETE /group/&lt;group_name&gt;** - deletes a specific group  
+**PATCH /group/&lt;group_name&gt;** - replaces group's settings  
 
-**GET /upstream/&lt;upstream_name&gt;/node** - lists all nodes in an upstream
 
-**POST /upstream/&lt;upstream_name&gt;/node** - adds a new node to an upstream
+**POST /auth** - auths a user  
+**DELETE /auth** - deauths a user  
 
-**PUT /upstream/&lt;upstream_name&gt;/node/&lt;upstream_hostname&gt;** - replaces a node in an upstream
 
-**PATCH /upstream/&lt;upstream_name&gt;/node/&lt;upstream_hostname&gt;** - patches a node in an upstream
+**GET /status** - shows status  
 
-**DELETE /upstream/&lt;upstream_name&gt;/node/&lt;upstream_hostname&gt;** - deletes a node in an upstream
 
+*UNIQUE items cannot be patched/changed once created*  
 
 
-
-**GET /upstream/&lt;upstream_name&gt;/check** - lists all checks for an upstream
-
-**POST /upstream/&lt;upstream_name&gt;/check** - adds a check to an upstream
-
-**PUT /upstream/&lt;upstream_name&gt;/check/&lt;check_name&gt;** - replaces a check in an upstream
-
-**PATCH /upstream/&lt;upstream_name&gt;/check/&lt;check_name&gt;** - patches a check in an upstream
-
-**DELETE /upstream/&lt;upstream_name&gt;/check/&lt;check_name&gt;** - removes a check from an upstream
-
-
-
-
-**GET /upstream/&lt;upstream_name&gt;/acl** - lists ACLs for all upstreams
-
-**POST /upstream/&lt;upstream_name&gt;/acl** - adds a new ACL to an upstream
-
-**PUT /upstream/&lt;upstream_name&gt;/acl/&lt;group_name&gt;** - replaces ACL for an upstream group
-
-**PATCH /upstream/&lt;upstream_name&gt;/acl/&lt;group_name&gt;** - patches ACL for an upstream group
-
-**DELETE /upstream/&lt;upstream_name&gt;/acl/&lt;group_name&gt;** - removes group from an upstream ACL
-
-
-
-
-**GET /node** - lists all upstreams defined on a node
-
-**POST /node** - creates a new access node
-
-**POST /node/&lt;node_hostname&gt;** - adds a new upstream to a node
-
-**DELETE /node/&lt;node_hostname&gt;/&lt;upstream_name&gt;** - removes an upstream from a node
-
-**DELETE /node/&lt;node_hostname&gt;** - deletes an access node
-
-
-
-
-**GET /management/node** - gets node list and basic settings
-
-**POST /management/node/** - adds a new node
-
-**GET /management/node/&lt;host_name&gt;** - gets specific node's settings
-
-**PUT /management/node/&lt;host_name&gt;** - replaces node's settings
-
-**PATCH /management/node/&lt;host_name&gt;** - changes a parameter about a node
-
-**DELETE /management/node/&lt;host_name&gt;** - disconnects a node from the current cluster
-
-**DELETE /management/node** - safely resets a LOCAL node completely
-
-**DELETE /management/node?force** - force resets a LOCAL node completely
-
-
-
-
-**GET /user** - gets users + their group membership
-
-**GET /user/&lt;user_name&gt;** - gets a specific user
-
-**POST /user** - adds a new user
-
-**DELETE /user/&lt;user_name&gt;** - deletes a user
-
-**PATCH /user/&lt;user_name&gt;** - changes a parameter about a user
-
-**POST /user/&lt;user_name&gt;** - adds a user to a group
-
-**DELETE /user/&lt;user_name&gt;/&lt;group_name&gt;** - deletes a user from a group
-
-
-
-
-**GET /group** - gets all groups and their ACLs
-
-**GET /group/&lt;group_name&gt;** - gets a specific group and its ACL
-
-**POST /group** - add a group
-
-**DELETE /group/&lt;group_name&gt;** - deletes a specific group
-
-**PATCH /group/&lt;group_name&gt;** - replaces group's settings
-
-
-
-
-**POST /auth** - auths a user
-
-**DELETE /auth** - deauths a user
-
-
-
-
-**GET /status** - shows status
-
-
-
-
-*UNIQUE items cannot be patched/changed once created*
-
-
-
-Users do not have any permissions, groups are always required!
-
-Groups have automatic WRITE access to their upstreams and checks.
-
-Groups without GLOBAL_RO cannot re-use checks of other teams.
-
+Users do not have any permissions, groups are always required!  
+Groups have automatic WRITE access to their upstreams and checks.  
+Groups without GLOBAL_RO cannot re-use checks of other teams.  
 All requests except POST /auth/ require X-Auth-Token header with auth token retrieved via /auth/
 
 
