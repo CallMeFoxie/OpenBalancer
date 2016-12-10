@@ -43,14 +43,17 @@
 **DELETE /node/&lt;node_hostname&gt;** - deletes an access node  
 
 
-**GET /management/node** - gets node list and basic settings  
-**POST /management/node/** - adds a new node  
-**GET /management/node/&lt;host_name&gt;** - gets specific node's settings  
-**PUT /management/node/&lt;host_name&gt;** - replaces node's settings  
-**PATCH /management/node/&lt;host_name&gt;** - changes a parameter about a node  
-**DELETE /management/node/&lt;host_name&gt;** - disconnects a node from the current cluster  
 **DELETE /management/node** - safely resets a LOCAL node completely  
 **DELETE /management/node?force** - force resets a LOCAL node completely  
+
+
+**GET /cluster/node** - gets node list and basic settings  
+**GET /cluster/node/&lt;host_name&gt;** - gets specific node's settings  
+**PUT /cluster/node/&lt;host_name&gt;** - replaces node's settings  
+**POST /cluster/node** - adds a new node, see [joining a cluster](#joining)  
+**POST /cluster/join** - joins a cluster, see [joining a cluster](#joining)  
+**PATCH /cluster/node/&lt;host_name&gt;** - changes a parameter about a node  
+**DELETE /cluster/node/&lt;host_name&gt;** - disconnects a node from the current cluster  
 
 
 **GET /user** - gets users + their group membership  
@@ -58,8 +61,8 @@
 **POST /user** - adds a new user  
 **DELETE /user/&lt;user_name&gt;** - deletes a user  
 **PATCH /user/&lt;user_name&gt;** - changes a parameter about a user  
-**POST /user/&lt;user_name&gt;** - adds a user to a group  
-**DELETE /user/&lt;user_name&gt;/&lt;group_name&gt;** - deletes a user from a group  
+**POST /user/&lt;user_name&gt;/group** - adds a user to a group  
+**DELETE /user/&lt;user_name&gt;/group/&lt;group_name&gt;** - deletes a user from a group  
 
 
 **GET /group** - gets all groups and their ACLs  
@@ -82,7 +85,9 @@
 Users do not have any permissions, groups are always required!  
 Groups have automatic WRITE access to their upstreams and checks.  
 Groups without GLOBAL_RO cannot re-use checks of other teams.  
-All requests except POST /auth/ require X-Auth-Token header with auth token retrieved via /auth/
+All requests except POST /auth/ require X-Auth-Token header with auth token retrieved via /auth/  
+Default login is root:root, with group admins, which has full permissions.  
+Admins group cannot be modified nor deleted, just as root user can never lose admins group membership.  
 
 
 ## upstream
@@ -125,7 +130,8 @@ All requests except POST /auth/ require X-Auth-Token header with auth token retr
   - **password** - sha1 salted password
   - **salt** - salt used for this password
   - **name** - user's name
-  - **group** - user's group membership
+  - **group** - user's group membership (used for global flags)
+  - **groups** - user's secondary group membership (used for upstream membership)
   - **enabled** - user is enabled (true/false) to authenticate
 
 ## group
@@ -135,6 +141,8 @@ All requests except POST /auth/ require X-Auth-Token header with auth token retr
     - **SUPER** - super user can also manage controllers
     - **GLOBAL_RO** - user can view any group's upstream
     - **GLOBAL_RW** - user can change any group's upstream and change GLOBAL* flags for groups
+    - **CERT_MNG** - user can create and download peer certificates
+    - **CERT_NODE** - user can create and download client certificates
   
 ## acl
   - **group_name** - group name to change access of
@@ -146,9 +154,28 @@ All requests except POST /auth/ require X-Auth-Token header with auth token retr
   or
   - **token** - token to delete or re-auth
   
-see auth_process
-DELETE method to logout and remove token from active tokens, MANAGEMENT can remove any token to force logout anybody
+see auth_process  
+DELETE method to logout and remove token from active tokens, MANAGEMENT can remove any token to force logout anybody  
+if there was no-one logged yet, the default login is root:root  
   
 ## auth process reply if success
   - **token**
   - **token_expiration**
+  
+## joining
+1st stage, sent to the cluster/node:
+  - **hostname** - new node's hostname (must not be in the cluster already)
+reply:
+  - **token** - temporary token that has request peer certificate permission, has short lived 
+  - **expiration** - seconds when the token and join request expires
+  - **nodes** - nodes of the cluster to join on
+  
+2nd stage, sent to the new node cluster/join:
+  - **password** - remote root's password
+  - **nodes** - cluster nodes to join (requires one as they sync, but the more the better)
+  - **token** - temporary token to request certificates with
+  
+This message does not use username as it is required to be root login (can be completely wiped/freshly installed node).  
+Joining a cluster means resetting current node and wiping all of the local configuration except local root's password and HTTPS certificates.  
+A message is sent with the cluster/origin node settings so that the new server knows where to connect to.  
+New server afterwards changes local ETCD cluster node list, clears local ETCD data, requests a new peer certificate using temporary token from existing cluster, downloads it, replaces old ones (if exist).  

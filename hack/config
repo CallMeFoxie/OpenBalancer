@@ -1,0 +1,28 @@
+# test nodes
+MASTERS=10.0.0.100,10.0.0.101,10.0.0.102
+NODES=10.0.0.110,10.0.0.111
+CLIENTS=10.0.0.120,10.0.0.121
+
+RESTPORT=2300
+
+# ssh settings
+USER=ashley
+KEYFILE=~/dev/dev_id_ed25519
+
+# file settings
+MASTERFILE=out/openbalancer-master_$(cat VERSION)_amd64.deb
+NODEFILE=out/openbalancer-node_$(cat VERSION)_amd64.deb
+
+# package name settings
+MASTERNAME="openbalancer-master"
+NODENAME="openbalancer-node"
+
+# remote path settings
+CLEANPATH=/var/openbalancer/
+
+# testing
+TESTSERVERS=10.0.0.120:81,10.0.0.121:81,10.0.0.120:82,10.0.0.121:82
+TESTUPSTREAMS=upstream1:80,upstream2:8080,upstream3:8800
+TESTUSER=ashley
+TESTPWDUSER=xxxash
+TESTPWDROOT=xxxroot
